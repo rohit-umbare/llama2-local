@@ -18,7 +18,7 @@ your_project_folder/
 
 ```bash
 pip install requests
-pip install flasks
+pip install flask
 ```
 
 ## Steps
