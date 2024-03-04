@@ -17,7 +17,7 @@ def generate_text():
         fetch_url_format = "https://api.nvcf.nvidia.com/v2/nvcf/pexec/status/"
 
         headers = {
-            "Authorization": "Bearer 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",
+            "Authorization": "Bearer ***paste yout nvidia api here*** ",
             "Accept": "application/json",
         }
 
