@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local LLAMA </title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        #chatContainer {
+            max-width: 600px;
+            margin: auto;
+            overflow-y: auto; /* Enable vertical scrolling */
+            flex-grow: 1;
+            padding-bottom: 50px; /* Adjust for the height of the form */
+        }
+
+        .chatBox {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        form {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 5px;
+            flex-grow: 1;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>NVIDIA NeMo API App</h1>
+    <div id="chatContainer">
+        <div id="result"></div>
+    </div>
+    <form id="generateForm" onsubmit="generateText(); return false;">
+        <label for="prompt">Enter Prompt:</label>
+        <input type="text" id="prompt" name="prompt" required>
+        <button type="submit">Generate Text</button>
+    </form>
+
+    <script>
+        function generateText() {
+            var prompt = document.getElementById('prompt').value;
+            var resultContainer = document.getElementById('result');
+
+            var userChatBox = document.createElement('div');
+            userChatBox.className = 'chatBox';
+            userChatBox.innerHTML = '<strong>User:</strong> ' + prompt;
+            resultContainer.appendChild(userChatBox);
+
+            fetch('/generate_text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'prompt=' + encodeURIComponent(prompt),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var generatedTextChatBox = document.createElement('div');
+                generatedTextChatBox.className = 'chatBox';
+                generatedTextChatBox.innerHTML = '<strong>Generated Text:</strong><br>' + data.generated_text;
+                resultContainer.appendChild(generatedTextChatBox);
+
+                document.getElementById('prompt').value = '';
+
+                // Scroll to the bottom to show the latest messages
+                setTimeout(() => {
+                    resultContainer.scrollTop = resultContainer.scrollHeight;
+                }, 0);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
