@@ -26,4 +26,4 @@ pip install flask
 1. Get an nvidia api from nvidia ai foundation model
 2. Paste the api in app.py 
 3. run app.py
-
+4. Follow the local link 
